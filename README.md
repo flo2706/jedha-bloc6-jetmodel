@@ -8,13 +8,12 @@
 
 ## Objectif du projet
 
-Chaque année, l’usure des pneus est responsable de nombreux accidents.  
-Le contrôle reste manuel, irrégulier et peu fiable.
+L’usure des pneus reste un facteur majeur d’accidents, principalement en raison d’un contrôle manuel, irrégulier et subjectif.
 
-**Objectif :** créer une solution de Computer Vision capable de :
+L’objectif de ce projet est de concevoir une solution complète de Computer Vision capable de :
 1. **Détecter automatiquement les pneus** dans une image (YOLOv8)
-2. **Évaluer leur état (Bon / Usé)** via un modèle MobileNetV2 finetuné
-3. Fournir une **application web utilisable par tous**
+2. **Évaluer leur état (Bon / Usé)** (MobileNetV2 finetuné)
+3. Offrir une application web simple d’usage, utilisable par tout public
 
 ---
 
@@ -25,18 +24,18 @@ Le contrôle reste manuel, irrégulier et peu fiable.
 - 1 classe : pneu  
 - Scores :
   - mAP@50 ≈ **97%**
-  - Precision ≈ 94% / Recall ≈ 92%
+  - Precision ≈ 94%
+  - Recall ≈ 92%
 
-Sert à isoler automatiquement le pneu avant classification.
+Utilisé pour isoler automatiquement chaque pneu avant classification.
 
 ---
 
 ### **2. Classification – MobileNetV2 finetuné**
-- Transfer learning + fine tuning des 10 dernières couches  
-- Adam (lr = 1e-5), BinaryCrossentropy  
-- Meilleur modèle à l’epoch 23 → val_accuracy ≈ **0.86**
-
- Modèle léger et optimisé pour le déploiement web.
+- Transfer learning + fine tuning (10 dernières couches)  
+- Optimiseur : Adam (lr = 1e-5)
+- Loss : BinaryCrossentropy  
+- Val_accuracy ≈ **0.86**
 
 *(Une baseline InceptionV3 a été utilisée pour référence.)*
 
@@ -49,47 +48,53 @@ Sert à isoler automatiquement le pneu avant classification.
 - 2 classes : `good` / `defective`
 
 ### **Dataset Détection**
-- Roboflow : images + labels YOLO
+- Roboflow : images annotées (format YOLOv8)
 
-Datasets publics & anonymes → conformes RGPD.
+Les données sont publiques, anonymes et conformes RGPD.
 
 ---
 
-## Pipeline prédictif complet
+## Pipeline prédictif 
 
-1. Upload image (pneu ou véhicule)
-2. Détection des pneus via **YOLOv8**
-3. Recadrage + preprocessing (OpenCV + MobileNetV2)
-4. Classification **Bon / Usé**
-5. Découpage 4×4 pour analyse locale (zones 🟩/🟥)
-6. Affichage final dans l’UI Streamlit
+1. Import de l’image (voiture ou pneu isolé)
+2. Détection des pneus avec **YOLOv8**
+3. Recadrage + preprocessing OpenCV
+4. Classification globale Bon / Usé avec MobileNetV2
+5. Analyse locale 4×4 :
+  - zones 🟩 = bonnes
+  - zones 🟥 = usées
+6. Affichage détaillé dans l’UI Streamlit
 
 ---
 
 ## Application Streamlit (Hugging Face Spaces)
+Ce projet inclut une application complète, accessible en ligne :
 
-- **Overview** : présentation et contexte  
-- **Dataset** : exploration des données  
-- **Model** : courbes, matrices de confusion, détails techniques  
-- **Predictions** : upload + détection + analyse complète du pneu  
+👉 https://huggingface.co/spaces/jedhajet/jedhaJeTter
 
-Application pensée pour un **public non technique**.
+Sections de l’application :
+- **Overview** : contexte & objectifs 
+- **Dataset** : inspection des données  
+- **Model** : performances, courbes, matrices de confusion 
+- **Predictions** : analyse automatique d’image 
+
+Conçue pour un public non expert, avec une interface pédagogique.
 
 ---
 
-## Résultats clés
+## Résultats 
 
-| Task                 | Modèle        | Score |
+| Tâche             | Modèle        | Score |
 |---------------------|---------------|--------|
 | Détection           | YOLOv8m       | mAP@50 ≈ **97%** |
 | Classification       | MobileNetV2   | Val_acc ≈ **0.86** |
-| Analyse locale      | 4×4 zones     | Cohérence visuelle |
+| Analyse locale      | Grid 4×4      | Cohérence visuelle |
 
 ---
 
 ## Stack technique
 
-- **DL** : TensorFlow / Keras (InceptionV3, MobileNetV2)  
+- **Deep Learning** : TensorFlow / Keras (InceptionV3, MobileNetV2)  
 - **Object Detection** : YOLOv8 (Ultralytics)  
 - **CV** : OpenCV, Pillow  
 - **Data** : pandas, numpy, scikit-image  
@@ -106,17 +111,16 @@ Application pensée pour un **public non technique**.
 - Détection d'autres défauts (hernie, craquelures…)
 - Version mobile (Android/iOS)
 - Pipeline MLOps (monitoring + réentraînement)
-- Intégration industrielle (capteurs automatiques)
+- Système embarqué industriel (capteurs automatiques)
 
 ---
 
 ## Projet Certification Jedha
 
-Ce projet démontre :
+Ce projet illustre :
 
-- la traduction d’un **problème métier** en pipeline ML,
-- la maîtrise de la **Computer Vision moderne**,
-- la gestion d’un projet **end-to-end** (data → modèle → app → déploiement),
-- la capacité à **vulgariser** les choix techniques.
+- la transformation d’un problème métier en solution ML complète
+- un pipeline end-to-end : data → modèle → application → déploiement
+- la capacité à **vulgariser** des choix techniques.
 
 ---
